@@ -3,379 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BHL Metal – Weld Reject Form</title>
+<title>Weld Reject Record</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
-
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3250;
-    --accent: #e83b3b;
-    --accent2: #ff6b35;
-    --text: #e8eaf0;
-    --muted: #8b8fa8;
-    --success: #2ecc71;
-    --warning: #f39c12;
-    --radius: 10px;
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3250;
+    --accent:#e83b3b;--accent2:#ff6b35;--text:#e8eaf0;--muted:#8b8fa8;
+    --success:#2ecc71;--radius:10px;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    padding: 20px 16px 40px;
-  }
-
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .header-icon {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .header-text h1 {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-
-  .header-text p {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Timestamp bar */
-  .timestamp-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .timestamp-bar span.live {
-    color: var(--success);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* Form card */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 14px;
-  }
-
-  .card-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-
-  .field-group {
-    display: grid;
-    gap: 14px;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  label .req {
-    color: var(--accent);
-    margin-left: 3px;
-  }
-
-  input, select, textarea {
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 13px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    width: 100%;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b8fa8' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    cursor: pointer;
-  }
-
-  select option {
-    background: var(--surface2);
-    color: var(--text);
-  }
-
-  /* Two column grid for small fields */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  /* Other reject input */
-  #otherRejectField {
-    margin-top: 10px;
-    display: none;
-  }
-
-  #otherRejectField.show {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  /* Reject mode badge preview */
-  .mode-badge {
-    display: inline-block;
-    background: rgba(232,59,59,0.15);
-    border: 1px solid rgba(232,59,59,0.4);
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 20px;
-    margin-top: 6px;
-    display: none;
-  }
-
-  /* Submit button */
-  .btn-submit {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none;
-    border-radius: var(--radius);
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    margin-top: 6px;
-    transition: opacity 0.2s, transform 0.1s;
-  }
-
-  .btn-submit:active {
-    transform: scale(0.98);
-    opacity: 0.9;
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Status overlay */
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(15,17,23,0.92);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .overlay.show {
-    display: flex;
-  }
-
-  .overlay-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 24px;
-    text-align: center;
-    max-width: 320px;
-    width: 100%;
-  }
-
-  .overlay-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
-
-  .overlay-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .overlay-msg {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  .overlay-ref {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    background: rgba(232,59,59,0.1);
-    padding: 6px 12px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    display: inline-block;
-  }
-
-  .btn-new {
-    width: 100%;
-    padding: 12px;
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .btn-new:hover {
-    border-color: var(--accent);
-  }
-
-  /* Spinner */
-  .spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .helper {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* Uppercase all text inputs except qty */
-  input.uppercase {
-    text-transform: uppercase;
-  }
-
-  /* Autocomplete dropdown */
-  .ac-wrapper {
-    position: relative;
-  }
-
-  .ac-list {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: var(--surface2);
-    border: 1.5px solid var(--accent);
-    border-radius: 8px;
-    z-index: 50;
-    max-height: 180px;
-    overflow-y: auto;
-  }
-
-  .ac-list.show {
-    display: block;
-  }
-
-  .ac-item {
-    padding: 10px 13px;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
-  .ac-item:last-child {
-    border-bottom: none;
-  }
-
-  .ac-item:hover, .ac-item.active {
-    background: rgba(232,59,59,0.15);
-    color: var(--accent);
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding:20px 16px 40px;}
+  .header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+  .header-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .header-text h1{font-size:17px;font-weight:700;}
+  .header-text p{font-size:12px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+  .timestamp-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .live{color:var(--success);display:flex;align-items:center;gap:6px;}
+  .dot{width:7px;height:7px;background:var(--success);border-radius:50%;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;}
+  .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  label{font-size:13px;font-weight:500;}
+  label .req{color:var(--accent);margin-left:3px;}
+  input,select{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;width:100%;transition:border-color 0.2s;-webkit-appearance:none;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b8fa8' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer;}
+  select option{background:var(--surface2);color:var(--text);}
+  .ac-wrapper{position:relative;}
+  .ac-list{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1.5px solid var(--accent);border-radius:8px;z-index:50;max-height:180px;overflow-y:auto;}
+  .ac-list.show{display:block;}
+  .ac-item{padding:10px 13px;font-size:14px;cursor:pointer;text-transform:uppercase;border-bottom:1px solid var(--border);}
+  .ac-item:last-child{border-bottom:none;}
+  .ac-item:hover,.ac-item.active{background:rgba(232,59,59,0.15);color:var(--accent);}
+  #otherRejectField{display:none;}
+  #otherRejectField.show{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+  .helper{font-size:11px;color:var(--muted);margin-top:4px;}
+  .mode-badge{display:none;background:rgba(232,59,59,0.15);border:1px solid rgba(232,59,59,0.4);color:var(--accent);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-top:6px;width:fit-content;}
+  .btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:var(--radius);color:white;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:opacity 0.2s,transform 0.1s;}
+  .btn-submit:active{transform:scale(0.98);opacity:0.9;}
+  .btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.92);z-index:100;align-items:center;justify-content:center;padding:20px;}
+  .overlay.show{display:flex;}
+  .overlay-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 24px;text-align:center;max-width:320px;width:100%;}
+  .overlay-icon{font-size:48px;margin-bottom:16px;}
+  .overlay-title{font-size:18px;font-weight:700;margin-bottom:8px;}
+  .overlay-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+  .overlay-ref{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);background:rgba(232,59,59,0.1);padding:6px 12px;border-radius:6px;margin-bottom:20px;display:inline-block;}
+  .btn-new{width:100%;padding:12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+  .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  input.uppercase{text-transform:uppercase;}
 </style>
 </head>
 <body>
-
-<!-- Header -->
 <div class="header">
   <div class="header-icon">⚠️</div>
   <div class="header-text">
@@ -383,102 +66,77 @@
     <p>BHL Metal · Robotic Welding Department</p>
   </div>
 </div>
-
-<!-- Live timestamp -->
 <div class="timestamp-bar">
   <span id="dateDisplay">--</span>
   <span class="live"><span class="dot"></span><span id="timeDisplay">--:--:--</span></span>
 </div>
-
-<!-- Part Info -->
 <div class="card">
   <div class="card-title">Part Information</div>
-  <div class="field-group">
-    <div class="grid-2">
-      <div class="field">
-        <label>Part No <span class="req">*</span></label>
-        <div class="ac-wrapper">
-          <input type="text" id="partNo" placeholder="e.g. BHL-001" autocomplete="off" class="uppercase" oninput="acInput(this,'partNo')" onkeydown="acKey(event,'partNo')" onblur="acBlur('partNo')">
-          <div class="ac-list" id="ac-partNo"></div>
-        </div>
+  <div class="grid-2">
+    <div class="field">
+      <label>Part No <span class="req">*</span></label>
+      <div class="ac-wrapper">
+        <input type="text" id="partNo" placeholder="E.G. BHL-001" class="uppercase" autocomplete="off" oninput="acInput(this,'partNo')" onkeydown="acKey(event,'partNo')" onblur="acBlur('partNo')">
+        <div class="ac-list" id="ac-partNo"></div>
       </div>
-      <div class="field">
-        <label>Qty Rejected <span class="req">*</span></label>
-        <input type="number" id="qty" placeholder="0" min="1">
-      </div>
+    </div>
+    <div class="field">
+      <label>Qty Rejected <span class="req">*</span></label>
+      <input type="number" id="qty" placeholder="0" min="1">
     </div>
   </div>
 </div>
-
-<!-- Reject Details -->
 <div class="card">
   <div class="card-title">Reject Details</div>
-  <div class="field-group">
-
-    <div class="field">
-      <label>Reject Mode <span class="req">*</span></label>
-      <select id="rejectMode" onchange="handleRejectMode(this)">
-        <option value="">— Select reject mode —</option>
-        <option value="Blowholes">Blowholes</option>
-        <option value="Checking Jig NG">Checking Jig NG</option>
-        <option value="Undercut">Undercut</option>
-        <option value="Missing Part">Missing Part</option>
-        <option value="Burnthrough">Burnthrough</option>
-        <option value="Incomplete Welding">Incomplete Welding</option>
-        <option value="Other">Other (specify below)</option>
-      </select>
-      <span class="mode-badge" id="modeBadge"></span>
+  <div class="field">
+    <label>Reject Mode <span class="req">*</span></label>
+    <select id="rejectMode" onchange="handleRejectMode(this)">
+      <option value="">— Select reject mode —</option>
+      <option value="BLOWHOLES">Blowholes</option>
+      <option value="CHECKING JIG NG">Checking Jig NG</option>
+      <option value="UNDERCUT">Undercut</option>
+      <option value="MISSING PART">Missing Part</option>
+      <option value="BURNTHROUGH">Burnthrough</option>
+      <option value="INCOMPLETE WELDING">Incomplete Welding</option>
+      <option value="OTHER">Other (specify below)</option>
+    </select>
+    <span class="mode-badge" id="modeBadge"></span>
+  </div>
+  <div class="field" id="otherRejectField">
+    <label>Specify Reject Mode <span class="req">*</span></label>
+    <div class="ac-wrapper">
+      <input type="text" id="otherRejectText" placeholder="Describe reject mode..." class="uppercase" autocomplete="off" oninput="acInput(this,'otherRejectText')" onkeydown="acKey(event,'otherRejectText')" onblur="acBlur('otherRejectText')">
+      <div class="ac-list" id="ac-otherRejectText"></div>
     </div>
-
-    <div class="field" id="otherRejectField">
-      <label>Specify Reject Mode <span class="req">*</span></label>
-      <div class="ac-wrapper">
-        <input type="text" id="otherRejectText" placeholder="Describe reject mode..." class="uppercase" oninput="acInput(this,'otherRejectText')" onkeydown="acKey(event,'otherRejectText')" onblur="acBlur('otherRejectText')" autocomplete="off">
-        <div class="ac-list" id="ac-otherRejectText"></div>
-      </div>
-      <span class="helper">This will be added to future dropdown options</span>
+    <span class="helper">Will be saved for future use</span>
+  </div>
+  <div class="field">
+    <label>Robot / Station <span class="req">*</span></label>
+    <div class="ac-wrapper">
+      <input type="text" id="robot" placeholder="E.G. ROBOT 3 / ST-05" class="uppercase" autocomplete="off" oninput="acInput(this,'robot')" onkeydown="acKey(event,'robot')" onblur="acBlur('robot')">
+      <div class="ac-list" id="ac-robot"></div>
     </div>
-
-    <div class="field">
-      <label>Robot / Station <span class="req">*</span></label>
-      <div class="ac-wrapper">
-        <input type="text" id="robot" placeholder="e.g. ROBOT 3 / ST-05" class="uppercase" oninput="acInput(this,'robot')" onkeydown="acKey(event,'robot')" onblur="acBlur('robot')" autocomplete="off">
-        <div class="ac-list" id="ac-robot"></div>
-      </div>
-    </div>
-
   </div>
 </div>
-
-<!-- PIC -->
 <div class="card">
   <div class="card-title">Submitted By</div>
-  <div class="field-group">
-    <div class="field">
-      <label>PIC (Leader Name) <span class="req">*</span></label>
-      <div class="ac-wrapper">
-        <input type="text" id="pic" placeholder="Full name" class="uppercase" oninput="acInput(this,'pic')" onkeydown="acKey(event,'pic')" onblur="acBlur('pic')" autocomplete="off">
-        <div class="ac-list" id="ac-pic"></div>
-      </div>
+  <div class="field">
+    <label>PIC (Leader Name) <span class="req">*</span></label>
+    <div class="ac-wrapper">
+      <input type="text" id="pic" placeholder="FULL NAME" class="uppercase" autocomplete="off" oninput="acInput(this,'pic')" onkeydown="acKey(event,'pic')" onblur="acBlur('pic')">
+      <div class="ac-list" id="ac-pic"></div>
     </div>
   </div>
 </div>
+<button class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Reject Record</button>
 
-<!-- Submit -->
-<button class="btn-submit" id="submitBtn" onclick="submitForm()">
-  Submit Reject Record
-</button>
-
-<!-- Overlay: Loading -->
 <div class="overlay" id="loadingOverlay">
   <div class="overlay-card">
     <div class="spinner"></div>
     <div class="overlay-title">Submitting...</div>
-    <div class="overlay-msg">Recording reject data to Google Sheets.</div>
+    <div class="overlay-msg">Recording reject data.</div>
   </div>
 </div>
-
-<!-- Overlay: Success -->
 <div class="overlay" id="successOverlay">
   <div class="overlay-card">
     <div class="overlay-icon">✅</div>
@@ -488,34 +146,26 @@
     <button class="btn-new" onclick="resetForm()">Submit Another</button>
   </div>
 </div>
-
-<!-- Overlay: Error -->
 <div class="overlay" id="errorOverlay">
   <div class="overlay-card">
     <div class="overlay-icon">❌</div>
     <div class="overlay-title">Submission Failed</div>
-    <div class="overlay-msg" id="errorMsg">Something went wrong. Please try again.</div>
+    <div class="overlay-msg" id="errorMsg">Something went wrong.</div>
     <button class="btn-new" onclick="closeError()">Try Again</button>
   </div>
 </div>
 
 <script>
-  // ===== CONFIG — REPLACE THIS =====
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzfSOeKmjl3bW3MYPCDKDSGDsNaL-g3hknkOOEAktAI_hX95ALaf9A2xnY-skiX0ARlLw/exec";
-  // =================================
-
-  // ===== AUTOCOMPLETE STORAGE =====
-  // Keys: fieldId → array of uppercase strings
-  const AC_KEYS = ['partNo', 'otherRejectText', 'robot', 'pic'];
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFImZFVhBiDsp7_w9hu1Hy8ll_RfwkBCRRJxJCQZwvmckh10e_kcX7-M4znloLesf9YA/exec";
+  const AC_KEYS = ['partNo','otherRejectText','robot','pic'];
   let acData = {};
   let acActiveIndex = {};
 
   function loadAC() {
-    AC_KEYS.forEach(key => {
-      try {
-        acData[key] = JSON.parse(localStorage.getItem('ac_' + key) || '[]');
-      } catch { acData[key] = []; }
-      acActiveIndex[key] = -1;
+    AC_KEYS.forEach(k => {
+      try { acData[k] = JSON.parse(localStorage.getItem('ac_'+k)||'[]'); }
+      catch { acData[k] = []; }
+      acActiveIndex[k] = -1;
     });
   }
 
@@ -525,177 +175,108 @@
     if (!acData[key].includes(val)) {
       acData[key].unshift(val);
       if (acData[key].length > 30) acData[key].pop();
-      localStorage.setItem('ac_' + key, JSON.stringify(acData[key]));
+      localStorage.setItem('ac_'+key, JSON.stringify(acData[key]));
     }
   }
 
   function acInput(input, key) {
-    // Force uppercase as user types
     const pos = input.selectionStart;
     input.value = input.value.toUpperCase();
     input.setSelectionRange(pos, pos);
-
     const query = input.value.trim();
-    const list = document.getElementById('ac-' + key);
+    const list = document.getElementById('ac-'+key);
     acActiveIndex[key] = -1;
-
-    if (!query) { list.classList.remove('show'); list.innerHTML = ''; return; }
-
+    if (!query) { list.classList.remove('show'); list.innerHTML=''; return; }
     const matches = acData[key].filter(v => v.startsWith(query) && v !== query);
-    if (!matches.length) { list.classList.remove('show'); list.innerHTML = ''; return; }
-
-    list.innerHTML = matches.slice(0, 8).map((m, i) =>
-      `<div class="ac-item" data-val="${m}" onmousedown="acSelect('${key}','${m}')">${m}</div>`
-    ).join('');
+    if (!matches.length) { list.classList.remove('show'); list.innerHTML=''; return; }
+    list.innerHTML = matches.slice(0,8).map(m => `<div class="ac-item" data-val="${m}" onmousedown="acSelect('${key}','${m}')">${m}</div>`).join('');
     list.classList.add('show');
   }
 
   function acKey(e, key) {
-    const list = document.getElementById('ac-' + key);
+    const list = document.getElementById('ac-'+key);
     const items = list.querySelectorAll('.ac-item');
-    if (!list.classList.contains('show') || !items.length) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      acActiveIndex[key] = Math.min(acActiveIndex[key] + 1, items.length - 1);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      acActiveIndex[key] = Math.max(acActiveIndex[key] - 1, 0);
-    } else if (e.key === 'Enter' && acActiveIndex[key] >= 0) {
-      e.preventDefault();
-      acSelect(key, items[acActiveIndex[key]].dataset.val);
-      return;
-    } else if (e.key === 'Escape') {
-      list.classList.remove('show');
-      acActiveIndex[key] = -1;
-      return;
-    }
-
-    items.forEach((item, i) => {
-      item.classList.toggle('active', i === acActiveIndex[key]);
-    });
+    if (!list.classList.contains('show')||!items.length) return;
+    if (e.key==='ArrowDown') { e.preventDefault(); acActiveIndex[key]=Math.min(acActiveIndex[key]+1,items.length-1); }
+    else if (e.key==='ArrowUp') { e.preventDefault(); acActiveIndex[key]=Math.max(acActiveIndex[key]-1,0); }
+    else if (e.key==='Enter'&&acActiveIndex[key]>=0) { e.preventDefault(); acSelect(key,items[acActiveIndex[key]].dataset.val); return; }
+    else if (e.key==='Escape') { list.classList.remove('show'); acActiveIndex[key]=-1; return; }
+    items.forEach((item,i) => item.classList.toggle('active', i===acActiveIndex[key]));
   }
 
   function acSelect(key, val) {
     document.getElementById(key).value = val;
-    const list = document.getElementById('ac-' + key);
-    list.classList.remove('show');
-    list.innerHTML = '';
-    acActiveIndex[key] = -1;
+    const list = document.getElementById('ac-'+key);
+    list.classList.remove('show'); list.innerHTML=''; acActiveIndex[key]=-1;
   }
 
   function acBlur(key) {
     setTimeout(() => {
-      const list = document.getElementById('ac-' + key);
-      if (list) { list.classList.remove('show'); list.innerHTML = ''; }
+      const list = document.getElementById('ac-'+key);
+      if (list) { list.classList.remove('show'); list.innerHTML=''; }
     }, 150);
   }
 
   loadAC();
 
-  // ===== LIVE CLOCK =====
   function updateClock() {
     const now = new Date();
-    document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('en-MY', {hour12: false});
-    document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-MY', {
-      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-    });
+    document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('en-MY',{hour12:false});
+    document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-MY',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
   }
-  updateClock();
-  setInterval(updateClock, 1000);
+  updateClock(); setInterval(updateClock, 1000);
 
-  // ===== REJECT MODE DROPDOWN =====
   function handleRejectMode(sel) {
     const otherField = document.getElementById('otherRejectField');
     const badge = document.getElementById('modeBadge');
     const val = sel.value;
-
-    if (val === 'Other') {
-      otherField.classList.add('show');
-      badge.style.display = 'none';
-    } else if (val) {
-      otherField.classList.remove('show');
-      badge.textContent = val.toUpperCase();
-      badge.style.display = 'inline-block';
-    } else {
-      otherField.classList.remove('show');
-      badge.style.display = 'none';
-    }
+    if (val==='OTHER') { otherField.classList.add('show'); badge.style.display='none'; }
+    else if (val) { otherField.classList.remove('show'); badge.textContent=val; badge.style.display='inline-block'; }
+    else { otherField.classList.remove('show'); badge.style.display='none'; }
   }
 
-  // ===== REF CODE =====
   function genRef() {
     const now = new Date();
     const pad = n => String(n).padStart(2,'0');
-    return `REJ-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    return `REJ-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
   }
 
-  // ===== VALIDATE =====
   function validate() {
     const fields = ['partNo','qty','rejectMode','robot','pic'];
-    for (const id of fields) {
-      if (!document.getElementById(id).value.trim()) return false;
-    }
-    const mode = document.getElementById('rejectMode').value;
-    if (mode === 'Other' && !document.getElementById('otherRejectText').value.trim()) return false;
+    for (const id of fields) { if (!document.getElementById(id).value.trim()) return false; }
+    if (document.getElementById('rejectMode').value==='OTHER' && !document.getElementById('otherRejectText').value.trim()) return false;
     return true;
   }
 
-  // ===== SUBMIT =====
   async function submitForm() {
-    if (!validate()) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-
+    if (!validate()) { alert('Please fill in all required fields.'); return; }
     const mode = document.getElementById('rejectMode').value;
-    const finalMode = (mode === 'Other'
-      ? document.getElementById('otherRejectText').value.trim()
-      : mode).toUpperCase();
-
+    const finalMode = mode==='OTHER' ? document.getElementById('otherRejectText').value.trim().toUpperCase() : mode;
     const ref = genRef();
     const now = new Date();
-
     const partNoVal = document.getElementById('partNo').value.trim().toUpperCase();
-    const robotVal  = document.getElementById('robot').value.trim().toUpperCase();
-    const picVal    = document.getElementById('pic').value.trim().toUpperCase();
+    const robotVal = document.getElementById('robot').value.trim().toUpperCase();
+    const picVal = document.getElementById('pic').value.trim().toUpperCase();
 
-    // Save to autocomplete memory
     saveAC('partNo', partNoVal);
     saveAC('robot', robotVal);
     saveAC('pic', picVal);
-    if (mode === 'Other') saveAC('otherRejectText', finalMode);
+    if (mode==='OTHER') saveAC('otherRejectText', finalMode);
 
-    const payload = {
-      ref: ref,
-      timestamp: now.toLocaleString('en-MY'),
-      partNo: partNoVal,
-      qty: document.getElementById('qty').value.trim(),
-      rejectMode: finalMode,
-      robot: robotVal,
-      pic: picVal
-    };
-
-    // Build GET URL with params
+    const payload = { ref, timestamp: now.toLocaleString('en-MY'), partNo: partNoVal, qty: document.getElementById('qty').value.trim(), rejectMode: finalMode, robot: robotVal, pic: picVal };
     const params = new URLSearchParams(payload);
-    const fullURL = APPS_SCRIPT_URL + "?" + params.toString();
 
     document.getElementById('loadingOverlay').classList.add('show');
     document.getElementById('submitBtn').disabled = true;
 
     try {
-      await fetch(fullURL, {
-        method: 'GET',
-        mode: 'no-cors'
-      });
-
+      await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
       document.getElementById('loadingOverlay').classList.remove('show');
       document.getElementById('refCode').textContent = `REF: ${ref}`;
       document.getElementById('successOverlay').classList.add('show');
-
     } catch (err) {
       document.getElementById('loadingOverlay').classList.remove('show');
-      document.getElementById('errorMsg').textContent = err.message || 'Network error. Check connection.';
+      document.getElementById('errorMsg').textContent = err.message || 'Network error.';
       document.getElementById('errorOverlay').classList.add('show');
       document.getElementById('submitBtn').disabled = false;
     }
@@ -704,19 +285,13 @@
   function resetForm() {
     document.getElementById('successOverlay').classList.remove('show');
     document.getElementById('submitBtn').disabled = false;
-    document.getElementById('partNo').value = '';
-    document.getElementById('qty').value = '';
-    document.getElementById('rejectMode').value = '';
-    document.getElementById('otherRejectText').value = '';
-    document.getElementById('robot').value = '';
-    document.getElementById('pic').value = '';
-    document.getElementById('modeBadge').style.display = 'none';
+    ['partNo','qty','robot','pic','otherRejectText'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('rejectMode').value='';
+    document.getElementById('modeBadge').style.display='none';
     document.getElementById('otherRejectField').classList.remove('show');
   }
 
-  function closeError() {
-    document.getElementById('errorOverlay').classList.remove('show');
-  }
+  function closeError() { document.getElementById('errorOverlay').classList.remove('show'); }
 </script>
 </body>
 </html>
