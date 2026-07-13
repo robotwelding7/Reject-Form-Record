@@ -1,0 +1,475 @@
+
+BHL_Review_Page.html
+
+Page
+1
+/
+1
+100%
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BHL Metal – Reject Review Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --accent: #e83b3b;
+    --accent2: #ff6b35;
+    --text: #e8eaf0;
+    --muted: #8b8fa8;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --pending: #e67e22;
+    --reviewed: #2ecc71;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 20px 16px 40px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #2980b9, #1abc9c);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .header-text h1 { font-size: 17px; font-weight: 700; }
+  .header-text p { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-num.pending { color: var(--pending); }
+  .stat-num.reviewed { color: var(--reviewed); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filter-btn {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .btn-refresh {
+    margin-left: auto;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .entry-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    transition: border-color 0.2s;
+  }
+
+  .entry-card.pending { border-left: 3px solid var(--pending); }
+  .entry-card.reviewed { border-left: 3px solid var(--reviewed); opacity: 0.7; }
+
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .entry-ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  .status-badge.pending {
+    background: rgba(230,126,34,0.15);
+    color: var(--pending);
+    border: 1px solid rgba(230,126,34,0.4);
+  }
+
+  .status-badge.reviewed {
+    background: rgba(46,204,113,0.15);
+    color: var(--reviewed);
+    border: 1px solid rgba(46,204,113,0.4);
+  }
+
+  .entry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .entry-field label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .entry-field span {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 2px;
+  }
+
+  .entry-field span.qty { color: var(--accent2); }
+  .entry-field span.mode { color: #a29bfe; }
+
+  .btn-review {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #2980b9, #1abc9c);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn-review:hover { opacity: 0.85; }
+  .btn-review:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .reviewed-info {
+    font-size: 11px;
+    color: var(--reviewed);
+    text-align: center;
+    padding: 8px;
+    background: rgba(46,204,113,0.08);
+    border-radius: 6px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  .loading {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: #2980b9;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Confirm overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,17,23,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .overlay.show { display: flex; }
+  .overlay-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+  }
+  .overlay-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .overlay-msg { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .overlay-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn-cancel {
+    padding: 11px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-confirm {
+    padding: 11px;
+    background: linear-gradient(135deg, #2980b9, #1abc9c);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">🔍</div>
+  <div class="header-text">
+    <h1>Reject Review Panel</h1>
+    <p>BHL Metal · QC Engineer</p>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num pending" id="pendingCount">—</div>
+    <div class="stat-label">PENDING REVIEW</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num reviewed" id="reviewedCount">—</div>
+    <div class="stat-label">REVIEWED</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
+  <button class="filter-btn" onclick="setFilter('reviewed', this)">Reviewed</button>
+  <button class="btn-refresh" onclick="loadData()">↻ Refresh</button>
+</div>
+
+<div class="entry-list" id="entryList">
+  <div class="loading">
+    <div class="spinner"></div>
+    Loading entries...
+  </div>
+</div>
+
+<!-- Confirm overlay -->
+<div class="overlay" id="confirmOverlay">
+  <div class="overlay-card">
+    <div class="overlay-title">Mark as Reviewed?</div>
+    <div class="overlay-msg" id="confirmMsg">—</div>
+    <div class="overlay-btns">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmReview()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== CONFIG =====
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoYQMwzwtAc1R1t0AHlCi3gLeEF2M5YO0J53VEpXyU2_5sqGYIIhsZdum6zmPb4MlA2Q/exec";
+  const REVIEWER_NAME = "YUSRI"; // Tukar nama kawe kat sini
+  // ==================
+
+  let allEntries = [];
+  let currentFilter = 'all';
+  let pendingReviewRow = null;
+
+  async function loadData() {
+    document.getElementById('entryList').innerHTML = `
+      <div class="loading"><div class="spinner"></div>Loading entries...</div>`;
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL + "?action=getRecords");
+      const text = await res.text();
+      const data = JSON.parse(text);
+      allEntries = data.records || [];
+      updateStats();
+      renderList();
+    } catch (err) {
+      document.getElementById('entryList').innerHTML = `
+        <div class="empty-state"><div class="icon">⚠️</div><p>Failed to load. Check connection.</p></div>`;
+    }
+  }
+
+  function updateStats() {
+    const pending = allEntries.filter(e => e.status === 'PENDING').length;
+    const reviewed = allEntries.filter(e => e.status === 'REVIEWED').length;
+    document.getElementById('pendingCount').textContent = pending;
+    document.getElementById('reviewedCount').textContent = reviewed;
+  }
+
+  function renderList() {
+    const list = document.getElementById('entryList');
+    let entries = allEntries;
+    if (currentFilter === 'pending') entries = allEntries.filter(e => e.status === 'PENDING');
+    if (currentFilter === 'reviewed') entries = allEntries.filter(e => e.status === 'REVIEWED');
+
+    if (!entries.length) {
+      list.innerHTML = `<div class="empty-state"><div class="icon">✅</div><p>No entries found.</p></div>`;
+      return;
+    }
+
+    list.innerHTML = entries.map(e => `
+      <div class="entry-card ${e.status.toLowerCase()}">
+        <div class="entry-top">
+          <span class="entry-ref">${e.ref}</span>
+          <span class="status-badge ${e.status.toLowerCase()}">${e.status}</span>
+        </div>
+        <div class="entry-grid">
+          <div class="entry-field">
+            <label>Part No</label>
+            <span>${e.partNo}</span>
+          </div>
+          <div class="entry-field">
+            <label>Qty Reject</label>
+            <span class="qty">${e.qty} pcs</span>
+          </div>
+          <div class="entry-field">
+            <label>Reject Mode</label>
+            <span class="mode">${e.rejectMode}</span>
+          </div>
+          <div class="entry-field">
+            <label>Robot</label>
+            <span>${e.robot}</span>
+          </div>
+          <div class="entry-field">
+            <label>PIC</label>
+            <span>${e.pic}</span>
+          </div>
+          <div class="entry-field">
+            <label>Timestamp</label>
+            <span style="font-size:11px">${e.timestamp}</span>
+          </div>
+        </div>
+        ${e.status === 'PENDING'
+          ? `<button class="btn-review" onclick="askReview(${e.row}, '${e.ref}', '${e.partNo}', '${e.qty}')">✓ Mark as Reviewed</button>`
+          : `<div class="reviewed-info">✅ Reviewed by ${e.reviewedBy} · ${e.reviewDate}</div>`
+        }
+      </div>
+    `).join('');
+  }
+
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderList();
+  }
+
+  function askReview(row, ref, partNo, qty) {
+    pendingReviewRow = row;
+    document.getElementById('confirmMsg').textContent =
+      `${ref} — ${partNo}, ${qty} pcs. Mark as reviewed?`;
+    document.getElementById('confirmOverlay').classList.add('show');
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('show');
+    pendingReviewRow = null;
+  }
+
+  async function confirmReview() {
+    if (!pendingReviewRow) return;
+    closeConfirm();
+
+    const now = new Date().toLocaleString('en-MY');
+    const url = `${APPS_SCRIPT_URL}?action=review&row=${pendingReviewRow}&reviewer=${encodeURIComponent(REVIEWER_NAME)}&reviewDate=${encodeURIComponent(now)}`;
+
+    try {
+      await fetch(url);
+      await loadData();
+    } catch (err) {
+      alert('Failed to update. Try again.');
+    }
+  }
+
+  // Load on start
+  loadData();
+</script>
+</body>
+</html>
+Displaying BHL_Review_Page.html.
